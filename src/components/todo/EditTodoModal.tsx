@@ -14,26 +14,41 @@ import { FormEvent, useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useAppDispatch } from "@/redux/hooks";
 import { editTodo } from "@/redux/features/todoSlice";
+import { useUpdateTodosMutation } from "@/redux/api/api";
 
 type TTodoEditProps = {
-  title: string;
-  description: string;
-  id: string;
+  todo: {
+    title: string;
+    description: string;
+    _id: string;
+    isCompleted: boolean;
+    priority: string;
+  };
 };
 
-const EditTodoModal = ({ title, description, id }: TTodoEditProps) => {
-  const [task, setTask] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const dispatch = useAppDispatch();
+const EditTodoModal = ({ todo }: TTodoEditProps) => {
+  const [task, setTask] = useState(todo.title);
+  const [newDescription, setNewDescription] = useState(todo.description);
+  const [editTodo, { isLoading }] = useUpdateTodosMutation();
+  // for local state
+  // const dispatch = useAppDispatch();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const taskDetaile = {
-      id: id,
+      _id: todo._id,
       title: task,
       description: newDescription,
+      isCompleted: todo.isCompleted,
+      priority: todo.priority,
     };
-    dispatch(editTodo(taskDetaile));
+
+    const options = {
+      id: todo._id,
+      data: taskDetaile,
+    };
+    editTodo(options);
+    // dispatch(editTodo(taskDetaile));
   };
 
   return (
@@ -71,7 +86,7 @@ const EditTodoModal = ({ title, description, id }: TTodoEditProps) => {
               </Label>
               <Input
                 onBlur={(e) => setTask(e.target.value)}
-                defaultValue={title}
+                defaultValue={todo.title}
                 id="task"
                 className="col-span-3"
                 placeholder="Task name"
@@ -83,7 +98,7 @@ const EditTodoModal = ({ title, description, id }: TTodoEditProps) => {
               </Label>
               <Textarea
                 onBlur={(e) => setNewDescription(e.target.value)}
-                defaultValue={description}
+                defaultValue={todo.description}
                 id="description"
                 className="col-span-3"
                 placeholder="Type your task here."

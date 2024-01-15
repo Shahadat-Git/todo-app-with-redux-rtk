@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const TodoContainer = () => {
   const [priority, setPriority] = useState("");
-  const { todos } = useAppSelector((state) => state.todos);
+  // const { todos } = useAppSelector((state) => state.todos);
   const { data, error, isLoading } = useGetTodosQuery(priority);
   return (
     <div>

@@ -16,7 +16,7 @@ type TTodoCardProps = {
   };
 };
 const TodoCard = ({ todo }: TTodoCardProps) => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [updateTodo, { isLoading }] = useUpdateTodosMutation();
   const [deleteTodo, { isError }] = useDeleteTodosMutation();
 
@@ -87,11 +87,7 @@ const TodoCard = ({ todo }: TTodoCardProps) => {
             />
           </svg>
         </Button>
-        <EditTodoModal
-          title={todo.title}
-          description={todo.description}
-          id={todo.id}
-        ></EditTodoModal>
+        <EditTodoModal todo={todo}></EditTodoModal>
       </div>
     </div>
   );
